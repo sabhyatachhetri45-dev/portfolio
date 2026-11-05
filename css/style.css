@@ -437,7 +437,7 @@ html:not(.is-book) .tag--section { margin-top: 1rem; }
 .is-book .tag { font-size: inherit; }
 .is-book .tag--name { position: absolute; top: 9rem; left: 5rem; font-size: 6rem; }
 .is-book .loop-arrow { position: absolute; top: 19rem; left: 11rem; width: 26rem; margin: 0; }
-.is-book .intro { position: absolute; bottom: 7rem; left: 5rem; max-width: 31rem; }
+.is-book .intro { position: absolute; bottom: 8.5rem; left: 5rem; max-width: 31rem; }
 
 .is-book .print--portrait { position: absolute; top: 5.5rem; left: 7rem; width: 28rem; }
 .is-book .page--photo .tag--surname { position: absolute; bottom: 8rem; left: 18rem; margin: 0; font-size: 4.5rem; }
@@ -655,9 +655,9 @@ html:not(.is-book).is-opening .cover {
   bottom: 0;
   left: 8%;
   width: 4.75rem;
-  transform: translateX(calc(var(--walk, 0) * 32vw));
+  transform: translateX(calc(var(--walk, 0) * 26vw));
 }
-.is-book .bubble { right: auto; left: 2.75rem; transform-origin: left bottom; }
+.is-book .bubble { right: auto; left: 2.75rem; max-width: 20rem; transform-origin: left bottom; }
 
 .has-motion .me { animation: boil 0.5s steps(1) infinite; }
 .has-motion .me__eye { animation: blink 4.5s infinite; }
@@ -692,7 +692,7 @@ html:not(.has-motion) .walker { display: none; }
 
 .doodle--flower { width: 6rem; margin: 1rem 0 0 auto; pointer-events: auto; transition: rotate 0.7s var(--spring); }
 .doodle--flower:hover { rotate: 72deg; }
-.is-book .doodle--flower { position: absolute; right: 4rem; bottom: 12rem; width: 7rem; margin: 0; }
+.is-book .doodle--flower { position: absolute; right: 4rem; bottom: 13.5rem; width: 7rem; margin: 0; }
 
 .doodle--stars { width: 6rem; margin-left: auto; }
 .is-book .doodle--stars { position: absolute; top: 5.5rem; right: 12rem; width: 7rem; margin: 0; }

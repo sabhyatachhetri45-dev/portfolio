@@ -30,7 +30,7 @@
 
   const spreadLines = [
     "psst, scroll to turn the page",
-    "try drawing on the paper!",
+    root.classList.contains("is-book") ? "try drawing on the paper!" : "still learning, still building",
     "ooh, Seoul!",
     "a cookie is hiding on page 3",
     "semicolons: 1, me: 0",
