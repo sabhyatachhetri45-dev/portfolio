@@ -4,7 +4,7 @@
   const leaves = [...document.querySelectorAll(".leaf")];
   const pages = [...document.querySelectorAll("[data-spread]")];
   const tabs = [...document.querySelectorAll("[data-spread-link]")];
-  const openingParts = [...document.querySelectorAll(".cover, .riffle")];
+  const cover = document.querySelector(".cover");
   const bookQuery = window.notebookQuery;
 
   // Share of each screen of scrolling where a page rests before it starts to turn.
@@ -98,7 +98,7 @@
     if (!root.classList.contains("is-opening")) return;
 
     root.classList.remove("is-opening");
-    openingParts.forEach((part) => part.remove());
+    cover.remove();
     // The observer has already fired for the first page, so it will not open itself.
     openSpread(0);
     if (root.classList.contains("is-book")) renderBook();
@@ -119,8 +119,7 @@
   bookQuery.addEventListener("change", syncMode);
 
   if (root.classList.contains("is-opening")) {
-    const lastToLand = root.classList.contains("is-book") ? openingParts.at(-1) : openingParts[0];
-    lastToLand.addEventListener("animationend", finishOpening, { once: true });
+    cover.addEventListener("animationend", finishOpening, { once: true });
     // Animations can stall in a background tab; the notebook must still end up open.
     setTimeout(finishOpening, OPENING_LIMIT);
   }
