@@ -350,6 +350,12 @@ html:not(.is-book) .tag--section { margin-top: 1rem; }
 }
 .is-book .leaf .page--left { transform: rotateY(180deg); }
 
+/* Safari can paint a hidden backface anyway, so each sheet shows one face itself. Opacity, not
+   visibility: links on the far side must stay focusable so keyboard users can still reach them. */
+.is-book .leaf .page--left,
+.is-book .leaf.is-past .page--right { opacity: 0; pointer-events: none; }
+.is-book .leaf.is-past .page--left { opacity: 1; pointer-events: auto; }
+
 /* Gutter shadow, plus the darkening a sheet picks up as it stands on edge. */
 .is-book .page::after {
   content: "";

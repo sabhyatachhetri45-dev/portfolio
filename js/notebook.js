@@ -32,6 +32,7 @@ function renderBook() {
     const isTurning = turn > 0 && turn < 1;
 
     leaf.style.setProperty("--t", turn);
+    leaf.classList.toggle("is-past", turn >= 0.5);
     leaf.style.setProperty("--bend", Math.sin(turn * Math.PI));
     // Unturned sheets stack first-on-top; turned sheets stack last-on-top, like a real book.
     leaf.style.setProperty("--z", isTurning ? leaves.length + 1 : turn === 0 ? leaves.length - index : index + 1);
