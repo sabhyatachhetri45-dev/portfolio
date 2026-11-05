@@ -61,6 +61,7 @@
     setActiveTab(spread);
     // Ink both sides of the next sheet early: its back flies past long before it lands.
     inkSpread(Math.floor(position));
+    inkSpread(Math.ceil(position));
     inkSpread(Math.ceil(position) + 1);
     // Marks only draw once the sheet has settled, not while it is still swinging past.
     if (Math.abs(position - spread) < REST) openSpread(spread);

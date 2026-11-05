@@ -457,7 +457,7 @@ html:not(.is-book) .tape--corner { top: -0.6rem; left: -0.75rem; width: 6rem; ro
 
 /* Three-rem rules with text set to the same step, so every written line lands on a printed one. */
 .is-book .page--note { padding-top: 3.25rem; background-size: 100% 3rem; background-position: 0 1.65rem; font-size: 1.5rem; line-height: 3rem; }
-.is-book .note-kind { left: 7rem; font-size: 0.9375rem; line-height: 1.5rem; }
+.is-book .note-kind { left: 4rem; font-size: 0.9375rem; line-height: 1.5rem; }
 .is-book .tag--note { margin-bottom: 3rem; font-size: 3.5rem; }
 .is-book .learned { margin: 3rem 0; }
 .is-book .btn { padding: 0.65rem 1.75rem; font-size: 1.125rem; }
