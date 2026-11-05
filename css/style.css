@@ -223,8 +223,11 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
   width: 1.1rem;
   height: 1.1rem;
   border: 2px solid var(--ink);
-  background: linear-gradient(135deg, transparent 44%, var(--ink) 44%, var(--ink) 56%, transparent 56%);
+  background: url("../assets/tick.svg") center / 130% no-repeat;
 }
+
+.learned--journey strong { display: inline-block; min-width: 5.5rem; font: 700 1rem/1 var(--label); }
+.learned li.is-todo::before { background: none; }
 
 .note-links { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; align-items: center; }
 
@@ -303,12 +306,14 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
   background: var(--desk);
 }
 
+/* Isolated, or a lower sheet's links and gutter shadow would paint through the sheets above it. */
 .is-book .page {
   position: absolute;
   top: 0;
   bottom: 0;
   width: 50%;
   padding: 3.5rem 4rem;
+  isolation: isolate;
 }
 .is-book .stage > .page--left { left: 0; }
 .is-book .stage > .page--right { left: 50%; }
@@ -341,7 +346,7 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
   z-index: 5;
   background:
     linear-gradient(rgb(29 27 53 / calc(var(--bend, 0) * 0.2)) 0 0),
-    linear-gradient(to var(--gutter-side), rgb(29 27 53 / 0.2), transparent 11%);
+    linear-gradient(to var(--gutter-side), rgb(29 27 53 / 0.17), rgb(29 27 53 / 0.05) 3%, transparent 9%);
   pointer-events: none;
 }
 .is-book .page--left { --gutter-side: left; }
@@ -354,9 +359,9 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
   bottom: 0;
   left: 50%;
   display: block;
-  width: 2px;
-  background: repeating-linear-gradient(transparent 0 6rem, var(--thread) 6rem 11rem, transparent 11rem 14rem);
-  filter: drop-shadow(1px 0 0 rgb(29 27 53 / 0.3));
+  width: 1.5px;
+  background: repeating-linear-gradient(transparent 0 5rem, var(--thread) 5rem 10rem, transparent 10rem 15rem);
+  filter: drop-shadow(1px 0 0 rgb(29 27 53 / 0.25));
   translate: -50% 0;
   pointer-events: none;
 }
@@ -413,9 +418,122 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
 .is-book .skills { gap: 2.5rem; }
 
 .is-book .page--plate { justify-content: center; }
-.is-book .tag--note { font-size: 3rem; margin-bottom: 3rem; }
+
+/* Three-rem rules with text set to the same step, so every written line lands on a printed one. */
+.is-book .page--note { padding-top: 3.25rem; background-size: 100% 3rem; background-position: 0 0.15rem; font-size: 1.5rem; line-height: 3rem; }
+.is-book .note-head { margin-bottom: 2.5rem; font-size: 1.125rem; line-height: 2rem; }
+.is-book .tag--note { margin-bottom: 3rem; font-size: 3.5rem; }
+.is-book .learned { margin: 3rem 0; }
+.is-book .btn { padding: 0.65rem 1.75rem; font-size: 1.125rem; }
+.is-book .learned--journey { margin: 4rem 0 0; font-size: 1.25rem; line-height: 2.5rem; }
 
 .is-book .tag--connect { position: absolute; top: 15rem; left: 3.5rem; font-size: 4.25rem; }
 .is-book .closing { position: absolute; top: 28rem; left: 5rem; }
 .is-book .link-list { margin-top: 14rem; }
 .is-book .colophon { position: absolute; bottom: 7rem; }
+
+.stamp--closing { position: absolute; bottom: 7rem; left: 5rem; margin: 0; }
+.is-book .stamp--closing { width: 8rem; height: 8rem; border-width: 4px; font-size: 2.75rem; }
+
+/* Notebook cover */
+
+.cover { display: none; }
+.cover__front, .cover__back { position: absolute; inset: 0; backface-visibility: hidden; }
+
+/* The dark strip is the cloth binding tape every Japanese study notebook has down its spine. */
+.cover__front {
+  display: grid;
+  place-items: center;
+  padding-bottom: 12%;
+  background: linear-gradient(90deg, var(--ink) 0 7%, var(--indigo) 7%);
+  box-shadow: 0 1.5rem 3rem -1rem rgb(29 27 53 / 0.55);
+}
+.cover__back { background: var(--paper); transform: rotateY(180deg); }
+
+.cover__label {
+  display: grid;
+  gap: 0.25rem;
+  width: min(72%, 24rem);
+  padding: 1.5rem 1.75rem;
+  border: var(--line);
+  outline: 2px solid var(--print);
+  background: var(--print);
+  color: var(--ink);
+  font: 400 1rem/1.5rem var(--label);
+}
+.cover__label strong { font: 600 2rem/2.75rem var(--hand); }
+
+.is-opening .cover { display: block; }
+
+.is-opening.is-book .cover {
+  position: absolute;
+  z-index: 250;
+  inset: 0 0 0 50%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  animation: cover-open 1.5s cubic-bezier(0.65, 0, 0.2, 1) 0.5s forwards;
+}
+/* A closed book lies in the middle of the desk, then slides right as its cover swings open. */
+.is-opening.is-book .stage { animation: book-settle 1.5s cubic-bezier(0.65, 0, 0.2, 1) 0.5s backwards; }
+.is-opening.is-book .stage > .page--left,
+.is-opening.is-book .spine,
+.is-opening.is-book .tabs { animation: appear 0.3s linear 1.9s backwards; }
+
+html:not(.is-book).is-opening .cover {
+  position: fixed;
+  z-index: 500;
+  inset: 0;
+  transform-origin: left center;
+  animation: cover-lift 1.1s cubic-bezier(0.65, 0, 0.2, 1) 0.45s forwards;
+}
+
+@keyframes cover-open { to { transform: rotateY(-180deg); } }
+@keyframes book-settle { from { transform: translateX(-25%); } }
+@keyframes appear { from { opacity: 0; } }
+@keyframes cover-lift {
+  70% { opacity: 1; }
+  to { opacity: 0; transform: perspective(90rem) rotateY(-100deg); }
+}
+
+/* Writing marks: only ever hidden once motion is confirmed, then drawn as a spread comes to rest. */
+
+.has-motion .draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.is-open .draw { stroke-dashoffset: 0; transition: stroke-dashoffset 0.9s var(--settle); }
+.is-open .draw--late { transition-delay: 0.75s; transition-duration: 0.3s; }
+
+.has-motion .skills mark { background-size: 0 100%; }
+.is-open .skills mark { background-size: 100% 100%; transition: background-size 0.6s var(--settle); }
+.is-open .skills__group:nth-child(2) mark { transition-delay: 0.15s; }
+.is-open .skills__group:nth-child(3) mark { transition-delay: 0.3s; }
+.is-open .skills__group:nth-child(4) mark { transition-delay: 0.45s; }
+
+.has-motion .stamp { opacity: 0; }
+.is-open .stamp { animation: stamp-down 0.42s var(--settle) 0.35s forwards; }
+
+.has-motion .tag--name, .has-motion .tag--surname, .has-motion .print--portrait { opacity: 0; }
+.is-open .tag--name { animation: slap-left 0.5s var(--settle) 0.25s forwards; }
+.is-open .print--portrait { animation: photo-drop 0.7s var(--settle) forwards; }
+.is-open .tag--surname { animation: slap-right 0.5s var(--settle) 0.5s forwards; }
+
+/* The first page lifts once on its own, so nobody has to be told it can turn. */
+.is-book .leaf:has(.page--photo.is-open) { animation: page-peek 1.3s ease-in-out 2.1s; }
+
+@keyframes stamp-down {
+  from { opacity: 0; scale: 1.8; }
+  to { opacity: 0.92; scale: 1; }
+}
+@keyframes slap-left {
+  from { opacity: 0; scale: 1.25; rotate: -14deg; }
+  to { opacity: 1; scale: 1; rotate: -7deg; }
+}
+@keyframes slap-right {
+  from { opacity: 0; scale: 1.25; rotate: 14deg; }
+  to { opacity: 1; scale: 1; rotate: 7deg; }
+}
+@keyframes photo-drop {
+  from { opacity: 0; translate: 0 -1.5rem; rotate: -2deg; }
+  to { opacity: 1; translate: 0 0; rotate: 1deg; }
+}
+@keyframes page-peek {
+  50% { --peek: 9deg; }
+}

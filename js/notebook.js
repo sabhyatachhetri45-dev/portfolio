@@ -17,6 +17,13 @@ function setActiveTab(spread) {
   tabs.forEach((tab, index) => tab.setAttribute("aria-current", String(links[index] === current)));
 }
 
+function openSpread(spread) {
+  if (root.classList.contains("is-opening")) return;
+  pages
+    .filter((page) => Number(page.dataset.spread) === spread)
+    .forEach((page) => page.classList.add("is-open"));
+}
+
 function renderBook() {
   const position = scrollY / innerHeight;
 
@@ -30,7 +37,10 @@ function renderBook() {
     leaf.style.setProperty("--z", isTurning ? leaves.length + 1 : turn === 0 ? leaves.length - index : index + 1);
   });
 
-  setActiveTab(Math.round(position));
+  const spread = Math.round(position);
+  setActiveTab(spread);
+  // Marks only draw once the sheet has settled, not while it is still swinging past.
+  if (Math.abs(position - spread) < REST) openSpread(spread);
 }
 
 let frame = 0;
@@ -72,11 +82,29 @@ function syncMode() {
   if (bookQuery.matches) renderBook();
 }
 
+function finishOpening() {
+  sessionStorage.setItem("notebook-opened", "1");
+  root.classList.remove("is-opening");
+  cover.remove();
+  if (root.classList.contains("is-book")) renderBook();
+}
+
+// On the single-column page there is no turning, so marks draw as each page scrolls in.
+const flowObserver = new IntersectionObserver((entries) => {
+  entries
+    .filter((entry) => entry.isIntersecting && !root.classList.contains("is-book") && !root.classList.contains("is-opening"))
+    .forEach((entry) => entry.target.classList.add("is-open"));
+}, { threshold: 0.3 });
+pages.forEach((page) => flowObserver.observe(page));
+
 addEventListener("scroll", onScroll, { passive: true });
 addEventListener("resize", onScroll);
 document.addEventListener("click", followAnchor);
 document.addEventListener("focusin", revealFocusedPage);
 bookQuery.addEventListener("change", syncMode);
+
+const cover = document.querySelector(".cover");
+if (root.classList.contains("is-opening")) cover.addEventListener("animationend", finishOpening, { once: true });
 
 syncMode();
 if (root.classList.contains("is-book") && location.hash) {

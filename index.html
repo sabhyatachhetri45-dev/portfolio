@@ -6,13 +6,16 @@
   <title>Sabhyata Chhetri — Notebook Portfolio</title>
   <meta name="description" content="Sabhyata Chhetri is a Computer Science student at Gachon University. This notebook holds her bio, skills and web programming projects.">
   <meta name="theme-color" content="#dddcd1">
-  <link rel="preload" href="assets/fonts/klee-one-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/m-plus-1-code-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <script>
     // Runs before first paint so a wide screen never flashes the single-column page.
     window.notebookQuery = matchMedia("(min-width: 60rem) and (min-height: 30rem) and (prefers-reduced-motion: no-preference)");
-    document.documentElement.classList.toggle("is-book", window.notebookQuery.matches);
+    const root = document.documentElement;
+    const canAnimate = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    root.classList.toggle("is-book", window.notebookQuery.matches);
+    root.classList.toggle("has-motion", canAnimate);
+    // The cover opens once per visit, and never over a link straight to an inner page.
+    root.classList.toggle("is-opening", canAnimate && !location.hash && !sessionStorage.getItem("notebook-opened"));
   </script>
   <script src="js/notebook.js" defer></script>
 </head>
@@ -29,6 +32,17 @@
   <main id="book" class="book">
     <div class="stage">
       <span class="spine" aria-hidden="true"></span>
+
+      <div class="cover" aria-hidden="true">
+        <div class="cover__front">
+          <div class="cover__label">
+            <span>Note Book</span>
+            <strong>Sabhyata Chhetri</strong>
+            <span>2026</span>
+          </div>
+        </div>
+        <div class="cover__back"></div>
+      </div>
 
       <section class="page page--left page--hello" id="hello" data-spread="0">
         <h1 class="tag tag--name">Sabhyata<span class="sr-only"> Chhetri</span></h1>
@@ -86,6 +100,11 @@
               <dd><mark>Problem Solving</mark></dd>
             </div>
           </dl>
+          <ul class="learned learned--journey">
+            <li><strong>Now</strong> Exploring programming, data structures and algorithms</li>
+            <li><strong>Learning</strong> Building interactive websites</li>
+            <li class="is-todo"><strong>Next</strong> Turning small experiments into bigger things</li>
+          </ul>
           <a class="turn" href="#note-seoulmate">Next page</a>
           <span class="folio">4</span>
         </section>
@@ -180,6 +199,7 @@
           <p class="margin-title margin-title--left" lang="ja">連絡</p>
           <h2 class="tag tag--connect">Connect <span class="tag__light">with me</span></h2>
           <p class="closing">Have an idea? Let’s turn it into something interesting.</p>
+          <span class="stamp stamp--closing" lang="ja" aria-hidden="true">完成</span>
           <span class="folio">11</span>
         </section>
       </div>
