@@ -29,7 +29,7 @@
   const BUBBLE_TIME = 3400;
 
   const spreadLines = [
-    "psst, scroll to turn the page",
+    root.classList.contains("is-book") ? "psst, scroll to turn the page" : "psst, keep scrolling",
     root.classList.contains("is-book") ? "try drawing on the paper!" : "still learning, still building",
     "ooh, Seoul!",
     "a cookie is hiding on page 3",

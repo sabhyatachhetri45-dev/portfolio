@@ -208,13 +208,21 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
   background-size: 100% 2rem;
 }
 
-.note-head {
-  display: flex;
-  justify-content: space-between;
+/* The printed rule at the top of a study notebook page. */
+.page--note::before {
+  content: "";
+  display: block;
+  height: calc(2.25rem + 2px);
   margin-bottom: 2.5rem;
-  padding-bottom: 0.25rem;
   border-bottom: var(--line);
-  font: 400 1rem/1.75rem var(--label);
+}
+
+.note-kind {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 5rem;
+  color: var(--ink-soft);
+  font: 400 0.875rem/1.5rem var(--label);
 }
 
 .tag--note { margin-bottom: 2.5rem; font-size: clamp(1.75rem, 8vw, 2.75rem); --tilt: -2deg; text-transform: none; }
@@ -299,6 +307,8 @@ html:not(.is-book) .tag--connect { max-width: 100%; }
 html:not(.is-book) .learned--journey li { flex-wrap: wrap; row-gap: 0; }
 html:not(.is-book) .learned--journey span { flex-basis: 100%; padding-left: 1.85rem; }
 html:not(.is-book) .tag--section { margin-top: 1rem; }
+html:not(.is-book) .page--plate { padding-top: 4.5rem; }
+html:not(.is-book) .tape--corner { top: -0.6rem; left: -0.75rem; width: 6rem; rotate: -24deg; }
 
 /* Book mode: every size is in rem and rem follows the viewport, so a page always fits its sheet. */
 
@@ -429,7 +439,6 @@ html:not(.is-book) .tag--section { margin-top: 1rem; }
 
 .is-book .margin-title { top: 3.5rem; right: 4.25rem; }
 .is-book .margin-title--left { right: auto; left: 1.5rem; }
-.is-book .page--note .note-head { margin-top: 0; }
 
 /* Hello spread, composed like the reference: the name sits high, the portrait owns the right page. */
 .is-book .tag { font-size: inherit; }
@@ -448,7 +457,7 @@ html:not(.is-book) .tag--section { margin-top: 1rem; }
 
 /* Three-rem rules with text set to the same step, so every written line lands on a printed one. */
 .is-book .page--note { padding-top: 3.25rem; background-size: 100% 3rem; background-position: 0 1.65rem; font-size: 1.5rem; line-height: 3rem; }
-.is-book .note-head { margin-bottom: 2.5rem; font-size: 1.125rem; line-height: 2rem; }
+.is-book .note-kind { left: 7rem; font-size: 0.9375rem; line-height: 1.5rem; }
 .is-book .tag--note { margin-bottom: 3rem; font-size: 3.5rem; }
 .is-book .learned { margin: 3rem 0; }
 .is-book .btn { padding: 0.65rem 1.75rem; font-size: 1.125rem; }
@@ -472,7 +481,7 @@ html:not(.is-book) .tag--section { margin-top: 1rem; }
   display: grid;
   place-items: center;
   padding-bottom: 12%;
-  background: linear-gradient(90deg, var(--ink) 0 7%, var(--indigo) 7%);
+  background: linear-gradient(90deg, var(--ink) 0 7%, transparent 7%), var(--indigo) url("../assets/cloth.webp") 0 0 / 9rem;
   box-shadow: 0 1.5rem 3rem -1rem rgb(29 27 53 / 0.55);
 }
 .cover__back { background: var(--paper); transform: rotateY(180deg); }
@@ -523,8 +532,11 @@ html:not(.is-book).is-opening .cover {
   to { opacity: 0; transform: perspective(90rem) rotateY(-100deg); }
 }
 
-/* Entrances: hidden only once motion is confirmed, then each spread writes itself as it arrives.
+/* Entrances: hidden only once motion is confirmed. .is-inked lays down a page's content ahead of
+   its turn, so a sheet in flight is never blank; .is-open then writes the marks on after it lands.
    Animations use backwards fill so hover can still spring the element once they finish. */
+
+.has-motion .page:not(.is-inked) :is(.btn, .text-link, .turn) { opacity: 0; }
 
 .has-motion .draw { opacity: 0; stroke-dasharray: 1; stroke-dashoffset: 1; }
 .is-open .draw { opacity: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 0.9s var(--settle) 0.3s, opacity 0.1s 0.3s; }
@@ -538,9 +550,9 @@ html:not(.is-book).is-opening .cover {
 
 .has-motion .stamp, .has-motion .tag, .has-motion .print { opacity: 0; }
 .is-open .stamp { opacity: 0.92; animation: stamp-down 0.42s var(--settle) 1.1s backwards; }
-.is-open .tag { opacity: 1; animation: slap 0.5s var(--spring) 0.15s backwards; }
-.is-open .tag--surname { animation-delay: 0.7s; }
-.is-open .print { opacity: 1; animation: print-drop 0.7s var(--settle) backwards; }
+.is-inked .tag { opacity: 1; animation: slap 0.5s var(--spring) 0.15s backwards; }
+.is-inked .tag--surname { animation-delay: 0.7s; }
+.is-inked .print { opacity: 1; animation: print-drop 0.7s var(--settle) backwards; }
 
 /* Tape pulls out from one end and presses flat, after the print has landed under it. */
 .has-motion .tape { scale: 0 1; transform-origin: left center; }
@@ -548,32 +560,34 @@ html:not(.is-book).is-opening .cover {
 
 /* Text is revealed downward, the direction it would have been written. */
 .has-motion .intro > *, .has-motion .bio, .has-motion .note-body, .has-motion .closing, .has-motion .caption { clip-path: inset(0 0 100% 0); }
-.is-open .intro > *, .is-open .bio, .is-open .note-body, .is-open .closing, .is-open .caption {
+.is-inked .intro > *, .is-inked .bio, .is-inked .note-body, .is-inked .closing, .is-inked .caption {
   clip-path: inset(0 -1rem -1rem -1rem);
   transition: clip-path 0.9s var(--settle) 0.4s;
 }
-.is-open .bio:nth-of-type(3), .is-open .intro > :nth-child(2) { transition-delay: 0.7s; }
-.is-open .bio:nth-of-type(4) { transition-delay: 1s; }
+.is-inked .bio:nth-of-type(3), .is-inked .intro > :nth-child(2) { transition-delay: 0.7s; }
+.is-inked .bio:nth-of-type(4) { transition-delay: 1s; }
 
 .has-motion .learned li { opacity: 0; translate: -0.75rem 0; }
 .has-motion .learned li::before { background-size: 0 0; }
-.is-open .learned li { opacity: 1; translate: 0 0; transition: opacity 0.3s, translate 0.4s var(--spring); transition-delay: 0.7s; }
+.is-inked .learned li { opacity: 1; translate: 0 0; transition: opacity 0.3s, translate 0.4s var(--spring); transition-delay: 0.7s; }
 .is-open .learned li::before { background-size: 130% 130%; transition: background-size 0.25s var(--spring) 1s; }
-.is-open .learned li:nth-child(2), .is-open .learned li:nth-child(2)::before { transition-delay: 0.85s; }
-.is-open .learned li:nth-child(3), .is-open .learned li:nth-child(3)::before { transition-delay: 1s; }
+.is-inked .learned li:nth-child(2) { transition-delay: 0.85s; }
+.is-open .learned li:nth-child(2)::before { transition-delay: 1.15s; }
+.is-inked .learned li:nth-child(3) { transition-delay: 1s; }
+.is-open .learned li:nth-child(3)::before { transition-delay: 1.3s; }
 
 /* Her name lands one rubber-stamped letter at a time. */
 .name-letter { display: inline-block; transition: translate 0.25s var(--spring), rotate 0.25s var(--spring); }
 .name-letter:hover { translate: 0 -0.14em; rotate: -8deg; }
 .has-motion .name-letter { opacity: 0; }
-.is-open .name-letter {
+.is-inked .name-letter {
   opacity: 1;
   animation: stamp-letter 0.34s var(--spring) backwards;
   animation-delay: calc(0.4s + var(--index) * 0.08s);
 }
 
 /* The first page lifts once on its own, so nobody has to be told it can turn. */
-.is-book .leaf:has(.page--photo.is-open) { animation: page-peek 1.3s ease-in-out 2.4s; }
+.is-book .leaf:not(.is-past):has(.page--photo.is-open) { animation: page-peek 1.3s ease-in-out 2.4s; }
 
 @keyframes stamp-down {
   from { opacity: 0; scale: 1.9; rotate: 8deg; }
@@ -752,7 +766,7 @@ html:not(.has-motion) .walker { display: none; }
 
 .is-book .eraser:not([hidden]) {
   position: absolute;
-  z-index: 270;
+  z-index: 305;
   bottom: 1.1rem;
   left: 50%;
   display: block;

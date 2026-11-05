@@ -23,8 +23,16 @@
 
   let announcedSpread = -1;
 
+  function inkSpread(spread) {
+    if (root.classList.contains("is-opening")) return;
+    pages
+      .filter((page) => Number(page.dataset.spread) === spread)
+      .forEach((page) => page.classList.add("is-inked"));
+  }
+
   function openSpread(spread) {
     if (root.classList.contains("is-opening")) return;
+    inkSpread(spread);
     pages
       .filter((page) => Number(page.dataset.spread) === spread)
       .forEach((page) => page.classList.add("is-open"));
@@ -51,6 +59,9 @@
 
     const spread = Math.round(position);
     setActiveTab(spread);
+    // Ink both sides of the next sheet early: its back flies past long before it lands.
+    inkSpread(Math.floor(position));
+    inkSpread(Math.ceil(position) + 1);
     // Marks only draw once the sheet has settled, not while it is still swinging past.
     if (Math.abs(position - spread) < REST) openSpread(spread);
   }
