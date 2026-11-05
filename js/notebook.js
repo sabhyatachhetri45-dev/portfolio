@@ -2,10 +2,12 @@ const root = document.documentElement;
 const leaves = [...document.querySelectorAll(".leaf")];
 const pages = [...document.querySelectorAll("[data-spread]")];
 const tabs = [...document.querySelectorAll("[data-spread-link]")];
+const openingParts = [...document.querySelectorAll(".cover, .riffle")];
 const bookQuery = window.notebookQuery;
 
 // Share of each screen of scrolling where a page rests before it starts to turn.
 const REST = 0.2;
+const OPENING_LIMIT = 3000;
 
 const clamp = (value) => Math.min(1, Math.max(0, value));
 const easeInOut = (value) => value * value * (3 - 2 * value);
@@ -84,9 +86,12 @@ function syncMode() {
 }
 
 function finishOpening() {
-  sessionStorage.setItem("notebook-opened", "1");
+  if (!root.classList.contains("is-opening")) return;
+
   root.classList.remove("is-opening");
-  cover.remove();
+  openingParts.forEach((part) => part.remove());
+  // The observer has already fired for the first page, so it will not open itself.
+  openSpread(0);
   if (root.classList.contains("is-book")) renderBook();
 }
 
@@ -104,8 +109,12 @@ document.addEventListener("click", followAnchor);
 document.addEventListener("focusin", revealFocusedPage);
 bookQuery.addEventListener("change", syncMode);
 
-const cover = document.querySelector(".cover");
-if (root.classList.contains("is-opening")) cover.addEventListener("animationend", finishOpening, { once: true });
+if (root.classList.contains("is-opening")) {
+  const lastToLand = root.classList.contains("is-book") ? openingParts.at(-1) : openingParts[0];
+  lastToLand.addEventListener("animationend", finishOpening, { once: true });
+  // Animations can stall in a background tab; the notebook must still end up open.
+  setTimeout(finishOpening, OPENING_LIMIT);
+}
 
 syncMode();
 if (root.classList.contains("is-book") && location.hash) {

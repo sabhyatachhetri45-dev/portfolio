@@ -494,19 +494,51 @@ html:not(.is-book) .tag--section { margin-top: 1rem; }
 
 .is-opening .cover { display: block; }
 
+.cover__seal {
+  position: absolute;
+  right: 10%;
+  bottom: 9%;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 3px solid var(--marker);
+  border-radius: 0.4rem;
+  color: var(--marker);
+  font: 400 1.375rem/1 var(--stamp);
+  rotate: -8deg;
+}
+
+.riffle { display: none; }
+
 .is-opening.is-book .cover {
   position: absolute;
   z-index: 250;
   inset: 0 0 0 50%;
   transform-origin: left center;
   transform-style: preserve-3d;
-  animation: cover-open 1.5s cubic-bezier(0.65, 0, 0.2, 1) 0.5s forwards;
+  animation: cover-open 1.1s cubic-bezier(0.65, 0, 0.2, 1) 0.45s forwards;
 }
+
+/* A few loose sheets fall open after the cover, the way a notebook riffles when you open it. */
+.is-opening.is-book .riffle {
+  position: absolute;
+  z-index: 251;
+  inset: 0 0 0 50%;
+  display: block;
+  background: var(--paper);
+  box-shadow: inset 2px 0 0 rgb(29 27 53 / 0.08);
+  transform-origin: left center;
+  animation: cover-open 1.1s cubic-bezier(0.65, 0, 0.2, 1) 0.55s forwards;
+}
+.is-opening.is-book .riffle:nth-of-type(2) { z-index: 252; animation-delay: 0.65s; }
+.is-opening.is-book .riffle:nth-of-type(3) { z-index: 253; animation-delay: 0.75s; }
+
 /* A closed book lies in the middle of the desk, then slides right as its cover swings open. */
-.is-opening.is-book .stage { animation: book-settle 1.5s cubic-bezier(0.65, 0, 0.2, 1) 0.5s backwards; }
+.is-opening.is-book .stage { animation: book-settle 1.1s cubic-bezier(0.65, 0, 0.2, 1) 0.45s backwards; }
 .is-opening.is-book .stage > .page--left,
 .is-opening.is-book .spine,
-.is-opening.is-book .tabs { animation: appear 0.3s linear 1.9s backwards; }
+.is-opening.is-book .tabs { animation: appear 0.2s linear 1.75s backwards; }
 
 html:not(.is-book).is-opening .cover {
   position: fixed;

@@ -16,8 +16,11 @@
       const canAnimate = !matchMedia("(prefers-reduced-motion: reduce)").matches;
       classList.toggle("is-book", window.notebookQuery.matches);
       classList.toggle("has-motion", canAnimate);
-      // The cover opens once per visit, and never over a link straight to an inner page.
-      classList.toggle("is-opening", canAnimate && !location.hash && !sessionStorage.getItem("notebook-opened"));
+      // The notebook opens on every visit, but never over a link straight to an inner page.
+      const opensWithCover = canAnimate && !location.hash;
+      classList.toggle("is-opening", opensWithCover);
+      // A reload would otherwise restore mid-book, and the cover would open onto the wrong page.
+      if (opensWithCover) history.scrollRestoration = "manual";
     }
   </script>
   <script src="js/notebook.js" defer></script>
@@ -44,9 +47,13 @@
             <strong>Sabhyata Chhetri</strong>
             <span>2026</span>
           </div>
+          <span class="cover__seal">S.C</span>
         </div>
         <div class="cover__back"></div>
       </div>
+      <span class="riffle" aria-hidden="true"></span>
+      <span class="riffle" aria-hidden="true"></span>
+      <span class="riffle" aria-hidden="true"></span>
 
       <section class="page page--left page--hello" id="hello" data-spread="0">
         <h1 class="tag tag--name" aria-label="Sabhyata Chhetri">Sabhyata<span class="sr-only"> Chhetri</span></h1>
