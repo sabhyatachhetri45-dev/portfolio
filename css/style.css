@@ -217,7 +217,7 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
 .note-body { max-width: 34rem; }
 
 .learned { display: grid; margin: 2rem 0; }
-.learned li { display: flex; gap: 0.75rem; align-items: center; }
+.learned li { display: flex; gap: 0.75rem; align-items: baseline; }
 /* Hand-ticked boxes rather than bullets: each item reads as something finished in class. */
 .learned li::before {
   content: "";
@@ -226,9 +226,10 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
   height: 1.1rem;
   border: 2px solid var(--ink);
   background: url("../assets/tick.svg") center / 130% no-repeat;
+  translate: 0 0.15em;
 }
 
-.learned--journey strong { display: inline-block; min-width: 5.5rem; font: 700 1rem/1 var(--label); }
+.learned--journey strong { flex: none; width: 5.5rem; font: 700 1rem/1 var(--label); }
 .learned li.is-todo::before { background: none; }
 
 .note-links { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; align-items: center; }
@@ -284,6 +285,14 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
 .tabs a[aria-current="true"] { background: var(--ink); color: var(--paper); }
 
 .spine, .turn { display: none; }
+
+/* Single-column page: there is no side margin to hold vertical titles, and nothing floats. */
+html:not(.is-book) .margin-title { display: none; }
+html:not(.is-book) .stamp--closing { position: static; display: grid; margin-top: 1.5rem; }
+html:not(.is-book) .tag--connect { max-width: 100%; }
+html:not(.is-book) .learned--journey li { flex-wrap: wrap; row-gap: 0; }
+html:not(.is-book) .learned--journey span { flex-basis: 100%; padding-left: 1.85rem; }
+html:not(.is-book) .tag--section { margin-top: 1rem; }
 
 /* Book mode: every size is in rem and rem follows the viewport, so a page always fits its sheet. */
 
