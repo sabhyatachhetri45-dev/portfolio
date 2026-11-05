@@ -623,3 +623,89 @@ html:not(.is-book).is-opening .cover {
 @keyframes page-peek {
   50% { --peek: 9deg; }
 }
+
+/* Doodle-Sabhyata: a notebook-corner flipbook. Scrolling flips her poses the way a thumb flips
+   パラパラ漫画 pages, so she only walks while you are actually turning. */
+
+.walker {
+  position: fixed;
+  z-index: 310;
+  right: 0.5rem;
+  bottom: 0.25rem;
+  width: 3.5rem;
+  pointer-events: none;
+}
+
+.me {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: scale 0.25s var(--spring);
+}
+.me:hover { scale: 1.1; }
+.walker.is-back .me { scale: -1 1; }
+.walker.is-back .me:hover { scale: -1.1 1.1; }
+.me path, .me circle { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.me .me__line { fill: none; }
+.me .me__skin { fill: var(--paper); }
+.me .me__hair { fill: var(--ink); }
+.me .me__eye { fill: var(--ink); stroke: none; transform-box: fill-box; transform-origin: center; }
+.me .me__flower circle { fill: var(--marker); }
+.me .me__flower path { fill: none; stroke: var(--shu); }
+
+.pose { display: none; }
+.me[data-pose="stand"] .pose--stand,
+.me[data-pose="stride-a"] .pose--stride-a,
+.me[data-pose="pass"] .pose--pass,
+.me[data-pose="stride-b"] .pose--stride-b,
+.me[data-pose="wave"] .pose--wave { display: inline; }
+
+.bubble {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  width: max-content;
+  max-width: 13rem;
+  margin-bottom: 0.5rem;
+  padding: 0.35rem 0.8rem;
+  border: var(--line);
+  border-radius: 1.1rem 1rem 1.2rem 0.3rem / 1rem 1.2rem 1rem 0.3rem;
+  background: var(--print);
+  font: 600 1rem/1.4rem var(--hand);
+  opacity: 0;
+  scale: 0.6;
+  transform-origin: right bottom;
+  transition: opacity 0.2s, scale 0.3s var(--spring);
+}
+.bubble.is-saying { opacity: 1; scale: 1; }
+
+.is-book .walker {
+  right: auto;
+  bottom: 0;
+  left: 8%;
+  width: 4.75rem;
+  transform: translateX(calc(var(--walk, 0) * 32vw));
+}
+.is-book .bubble { right: auto; left: 2.75rem; transform-origin: left bottom; }
+
+.has-motion .me { animation: boil 0.5s steps(1) infinite; }
+.has-motion .me__eye { animation: blink 4.5s infinite; }
+.walker.is-hopping { animation: hop 0.55s var(--spring); }
+html:not(.has-motion) .walker { display: none; }
+/* She waits for the cover: nobody is standing on a closed notebook. */
+.is-opening .walker { opacity: 0; }
+
+@keyframes boil {
+  0% { filter: url("#boil-1"); }
+  33% { filter: url("#boil-2"); }
+  66% { filter: url("#boil-3"); }
+}
+@keyframes blink {
+  0%, 94%, 100% { scale: 1 1; }
+  97% { scale: 1 0.1; }
+}
+@keyframes hop {
+  40% { translate: 0 -2.25rem; }
+}

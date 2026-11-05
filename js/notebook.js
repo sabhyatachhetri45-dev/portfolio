@@ -19,11 +19,17 @@ function setActiveTab(spread) {
   tabs.forEach((tab, index) => tab.setAttribute("aria-current", String(links[index] === current)));
 }
 
+let announcedSpread = -1;
+
 function openSpread(spread) {
   if (root.classList.contains("is-opening")) return;
   pages
     .filter((page) => Number(page.dataset.spread) === spread)
     .forEach((page) => page.classList.add("is-open"));
+
+  if (spread === announcedSpread) return;
+  announcedSpread = spread;
+  document.dispatchEvent(new CustomEvent("spreadchange", { detail: { spread } }));
 }
 
 function renderBook() {
@@ -99,7 +105,7 @@ function finishOpening() {
 const flowObserver = new IntersectionObserver((entries) => {
   entries
     .filter((entry) => entry.isIntersecting && !root.classList.contains("is-book") && !root.classList.contains("is-opening"))
-    .forEach((entry) => entry.target.classList.add("is-open"));
+    .forEach((entry) => openSpread(Number(entry.target.dataset.spread)));
 }, { threshold: 0.3 });
 pages.forEach((page) => flowObserver.observe(page));
 
