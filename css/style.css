@@ -255,3 +255,167 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
 .link-list span:not(.sr-only) { display: block; margin-top: 0.5rem; color: var(--ink-soft); font: 400 1rem/1.5rem var(--label); overflow-wrap: anywhere; }
 
 .colophon { margin-top: 4rem; color: var(--ink-soft); font: 400 1rem/1.75rem var(--label); }
+
+/* Index tabs: the row at the top of a phone, the paper tabs on the page edge in book mode. */
+
+.tabs {
+  position: sticky;
+  z-index: 320;
+  top: 0;
+  display: flex;
+  background: var(--paper);
+  border-bottom: var(--line);
+}
+.tabs a {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  color: var(--ink);
+  font: 700 0.875rem/2rem var(--label);
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+.tabs a:hover { background: var(--marker); }
+.tabs a[aria-current="true"] { background: var(--ink); color: var(--paper); }
+
+.spine, .turn { display: none; }
+
+/* Book mode: every size is in rem and rem follows the viewport, so a page always fits its sheet. */
+
+@property --peek {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+:root { --leaf-count: 5; }
+
+.is-book { font-size: clamp(12px, min(1.78vh, 1.11vw), 22px); background: var(--desk); scroll-behavior: auto; }
+
+.is-book .book { height: calc((var(--leaf-count) + 1) * 100vh); }
+
+.is-book .stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  perspective: 240rem;
+  background: var(--desk);
+}
+
+.is-book .page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  padding: 3.5rem 4rem;
+}
+.is-book .stage > .page--left { left: 0; }
+.is-book .stage > .page--right { left: 50%; }
+.is-book .page--right { padding-right: 6.5rem; }
+
+.is-book .leaf {
+  position: absolute;
+  z-index: var(--z, 1);
+  inset: 0 0 0 50%;
+  transform: rotateY(calc(var(--t, 0) * -180deg - var(--peek)));
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: --peek 0.4s var(--settle);
+  will-change: transform;
+}
+.is-book .leaf:has(.turn:hover) { --peek: 7deg; }
+
+.is-book .leaf .page {
+  left: 0;
+  width: 100%;
+  backface-visibility: hidden;
+}
+.is-book .leaf .page--left { transform: rotateY(180deg); }
+
+/* Gutter shadow, plus the darkening a sheet picks up as it stands on edge. */
+.is-book .page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background:
+    linear-gradient(rgb(29 27 53 / calc(var(--bend, 0) * 0.2)) 0 0),
+    linear-gradient(to var(--gutter-side), rgb(29 27 53 / 0.2), transparent 11%);
+  pointer-events: none;
+}
+.is-book .page--left { --gutter-side: left; }
+.is-book .page--right { --gutter-side: right; }
+
+.is-book .spine {
+  position: absolute;
+  z-index: 300;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  display: block;
+  width: 2px;
+  background: repeating-linear-gradient(transparent 0 6rem, var(--thread) 6rem 11rem, transparent 11rem 14rem);
+  filter: drop-shadow(1px 0 0 rgb(29 27 53 / 0.3));
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.is-book .tabs {
+  position: fixed;
+  top: 6rem;
+  right: 0;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: none;
+  border: 0;
+}
+.is-book .tabs a {
+  padding: 1.25rem 0.5rem;
+  border: var(--line);
+  border-right: 0;
+  background: var(--desk);
+  line-height: 1.5rem;
+  writing-mode: vertical-rl;
+}
+.is-book .tabs a:hover { background: var(--marker); }
+.is-book .tabs a[aria-current="true"] { background: var(--ink); }
+
+.is-book .folio { left: 4rem; }
+.is-book .page--right .folio { right: 6.5rem; left: auto; }
+
+.is-book .turn {
+  position: absolute;
+  z-index: 6;
+  right: 9rem;
+  bottom: 1.25rem;
+  display: block;
+  color: var(--ink);
+  font: 700 0.9375rem/1.5rem var(--label);
+}
+.is-book .turn:hover { color: var(--shu); }
+
+.is-book .margin-title { top: 3.5rem; right: 4.25rem; }
+.is-book .margin-title--left { right: auto; left: 1.5rem; }
+.is-book .page--note .note-head { margin-top: 0; }
+
+/* Hello spread, composed like the reference: the name sits high, the portrait owns the right page. */
+.is-book .tag { font-size: inherit; }
+.is-book .tag--name { position: absolute; top: 9rem; left: 5rem; font-size: 6rem; }
+.is-book .loop-arrow { position: absolute; top: 19rem; left: 11rem; width: 26rem; margin: 0; }
+.is-book .intro { position: absolute; bottom: 7rem; left: 5rem; max-width: 31rem; }
+
+.is-book .print--portrait { position: absolute; top: 5.5rem; left: 7rem; width: 28rem; }
+.is-book .page--photo .tag--surname { position: absolute; bottom: 8rem; left: 18rem; margin: 0; font-size: 4.5rem; }
+
+.is-book .tag--section { margin: 5rem 0 3.5rem; font-size: 3.5rem; }
+.is-book .bio { font-size: 1.375rem; line-height: 2.25rem; }
+.is-book .skills { gap: 2.5rem; }
+
+.is-book .page--plate { justify-content: center; }
+.is-book .tag--note { font-size: 3rem; margin-bottom: 3rem; }
+
+.is-book .tag--connect { position: absolute; top: 15rem; left: 3.5rem; font-size: 4.25rem; }
+.is-book .closing { position: absolute; top: 28rem; left: 5rem; }
+.is-book .link-list { margin-top: 14rem; }
+.is-book .colophon { position: absolute; bottom: 7rem; }
