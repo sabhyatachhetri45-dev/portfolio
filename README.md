@@ -2,6 +2,8 @@
 
 My personal portfolio, designed as a Japanese study notebook. Scroll to turn the pages, and each project is a note.
 
+Watch for the little doodle walking along the bottom, draw on the empty paper with your mouse, and see if you can find the cookie.
+
 Built with plain HTML, CSS and JavaScript.
 
 ## Run it

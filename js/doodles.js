@@ -82,6 +82,7 @@ me.addEventListener("click", () => {
 document.addEventListener("spreadchange", ({ detail }) => {
   currentSpread = detail.spread;
   say(spreadLines[currentSpread]);
+  redrawSketch();
   pages.forEach((page) => page.classList.toggle("is-current", Number(page.dataset.spread) === currentSpread));
 });
 
@@ -122,3 +123,85 @@ cookie.addEventListener("click", () => {
     scatterCrumbs();
   }
 });
+
+const stage = document.querySelector(".stage");
+const sketch = document.querySelector(".sketch");
+const eraser = document.querySelector(".eraser");
+const pen = sketch.getContext("2d");
+const strokesBySpread = new Map();
+const PEN_WIDTH = 2.4;
+const TURNING_AFTER = 0.2;
+
+let activeStroke = null;
+
+const strokesHere = () => strokesBySpread.get(currentSpread) ?? [];
+
+function drawSegment(from, to) {
+  pen.beginPath();
+  pen.moveTo(from.x, from.y);
+  pen.lineTo(to.x, to.y);
+  pen.stroke();
+}
+
+function redrawSketch() {
+  pen.clearRect(0, 0, innerWidth, innerHeight);
+  strokesHere().forEach((stroke) => {
+    stroke.forEach((point, index) => {
+      if (index > 0) drawSegment(stroke[index - 1], point);
+    });
+  });
+  eraser.hidden = strokesHere().length === 0;
+}
+
+function fitSketch() {
+  const scale = devicePixelRatio;
+  sketch.width = innerWidth * scale;
+  sketch.height = innerHeight * scale;
+  pen.setTransform(scale, 0, 0, scale, 0, 0);
+  pen.lineCap = "round";
+  pen.lineJoin = "round";
+  pen.lineWidth = PEN_WIDTH;
+  pen.strokeStyle = getComputedStyle(root).getPropertyValue("--ink");
+  redrawSketch();
+}
+
+// Only bare paper starts a stroke, so selecting text and clicking links keep working as normal.
+function startStroke(event) {
+  const onBarePaper = event.target.classList.contains("page");
+  if (!root.classList.contains("is-book") || !onBarePaper) return;
+  if (event.pointerType === "touch" || event.button !== 0) return;
+
+  event.preventDefault();
+  activeStroke = [{ x: event.clientX, y: event.clientY }];
+  strokesBySpread.set(currentSpread, [...strokesHere(), activeStroke]);
+  stage.setPointerCapture(event.pointerId);
+  eraser.hidden = false;
+}
+
+function continueStroke(event) {
+  if (!activeStroke) return;
+  const point = { x: event.clientX, y: event.clientY };
+  drawSegment(activeStroke.at(-1), point);
+  activeStroke.push(point);
+}
+
+function endStroke() {
+  activeStroke = null;
+}
+
+function hideSketchWhileTurning() {
+  const position = scrollY / innerHeight;
+  sketch.classList.toggle("is-turning", Math.abs(position - Math.round(position)) >= TURNING_AFTER);
+}
+
+eraser.addEventListener("click", () => {
+  strokesBySpread.delete(currentSpread);
+  redrawSketch();
+});
+stage.addEventListener("pointerdown", startStroke);
+stage.addEventListener("pointermove", continueStroke);
+stage.addEventListener("pointerup", endStroke);
+stage.addEventListener("pointercancel", endStroke);
+addEventListener("scroll", hideSketchWhileTurning, { passive: true });
+addEventListener("resize", fitSketch);
+fitSketch();
