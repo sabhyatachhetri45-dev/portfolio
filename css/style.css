@@ -167,3 +167,79 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
   color: inherit;
   background: linear-gradient(transparent 40%, var(--marker) 40%, var(--marker) 88%, transparent 88%) no-repeat;
 }
+
+/* Project notes */
+
+.print--note { width: 100%; max-width: 38rem; }
+.print--note .print__img { height: auto; aspect-ratio: 8 / 5; object-position: top; }
+.tilt-a { rotate: -1.5deg; }
+.tilt-b { rotate: 1.25deg; }
+.tilt-c { rotate: -0.75deg; }
+.tape--corner { top: -0.7rem; left: -1.5rem; rotate: -32deg; }
+
+.caption { margin-top: 2rem; font-size: 1.5rem; }
+
+/* Round name-seal shape, but the word is 完成: the "finished" stamp a teacher leaves on a notebook. */
+.stamp {
+  display: inline-grid;
+  place-items: center;
+  width: 4.75rem;
+  height: 4.75rem;
+  margin: 1rem 0 0 auto;
+  border: 3px solid var(--shu);
+  border-radius: 50%;
+  color: var(--shu);
+  font: 400 1.5rem/1.05 var(--stamp);
+  writing-mode: vertical-rl;
+  rotate: -12deg;
+}
+.page--plate { display: flex; flex-direction: column; }
+
+/* Project pages use ruled paper, like the printed header line of a study notebook. */
+.page--note {
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px);
+  background-size: 100% 2rem;
+}
+
+.note-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: var(--line);
+  font: 400 1rem/1.75rem var(--label);
+}
+
+.tag--note { margin-bottom: 2.5rem; font-size: clamp(1.75rem, 8vw, 2.75rem); rotate: -2deg; text-transform: none; }
+
+.note-body { max-width: 34rem; }
+
+.learned { display: grid; margin: 2rem 0; }
+.learned li { display: flex; gap: 0.75rem; align-items: center; }
+/* Hand-ticked boxes rather than bullets: each item reads as something finished in class. */
+.learned li::before {
+  content: "";
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--ink);
+  background: linear-gradient(135deg, transparent 44%, var(--ink) 44%, var(--ink) 56%, transparent 56%);
+}
+
+.note-links { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; align-items: center; }
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border: var(--line);
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 1rem/1.5rem var(--label);
+  text-decoration: none;
+  rotate: -1deg;
+  transition: rotate 0.25s var(--settle), background-color 0.25s, color 0.25s;
+}
+.btn:hover { background: var(--paper); color: var(--ink); rotate: 1deg; }
+
+.text-link { font-weight: 600; }
+.text-link:hover { text-decoration-color: var(--shu); }
