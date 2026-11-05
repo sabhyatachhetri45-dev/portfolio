@@ -1,0 +1,148 @@
+@font-face { font-family: "Klee One"; src: url("../assets/fonts/klee-one-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Klee One"; src: url("../assets/fonts/klee-one-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "M PLUS 1 Code"; src: url("../assets/fonts/m-plus-1-code-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "M PLUS 1 Code"; src: url("../assets/fonts/m-plus-1-code-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Yuji Boku"; src: url("../assets/fonts/yuji-boku-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+
+:root {
+  color-scheme: light;
+
+  --paper: #dddcd1;
+  --desk: #c7c6b9;
+  --print: #f0efe6;
+  --ink: #1d1b35;
+  --ink-soft: #47455a;
+  --rule: rgb(29 27 53 / 0.1);
+  --shu: #b0351f;
+  --marker: #edd38c;
+  --indigo: #1f2c4d;
+  --thread: #f3f1e7;
+
+  --hand: "Klee One", "Hiragino Maru Gothic ProN", "Yu Gothic", cursive;
+  --label: "M PLUS 1 Code", "Hiragino Sans", ui-monospace, monospace;
+  --stamp: "Yuji Boku", "Hiragino Mincho ProN", serif;
+
+  /* One grid square. Body text sits on every second line, like writing on 5mm paper. */
+  --cell: 1rem;
+  --line: 2px solid var(--ink);
+  --lift: 0 0.9rem 1.6rem -0.7rem rgb(29 27 53 / 0.45);
+  --settle: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--paper); scroll-behavior: smooth; scrollbar-color: var(--ink-soft) var(--desk); }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font: 400 1.25rem/2rem var(--hand);
+}
+
+h1, h2, h3, p, ul, figure { margin: 0; padding: 0; }
+ul { list-style: none; }
+img, svg { display: block; max-width: 100%; }
+strong { font-weight: 600; }
+a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em; }
+
+::selection { background: var(--marker); color: var(--ink); }
+:focus-visible { outline: 3px solid var(--shu); outline-offset: 3px; border-radius: 2px; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 400;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 1rem/1.75rem var(--label);
+  transform: translateY(-300%);
+}
+.skip-link:focus { transform: none; }
+
+/* Paper */
+
+.page {
+  position: relative;
+  padding: 3rem 1.5rem 4rem 2.5rem;
+  overflow: hidden;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+}
+
+.folio {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 2.5rem;
+  color: var(--ink-soft);
+  font: 400 0.875rem/1.5rem var(--label);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The tilted ink labels from the reference: they read like a name slip stuck on by hand. */
+.tag {
+  display: inline-block;
+  padding: 0.35em 0.6em 0.3em;
+  border: var(--line);
+  background: var(--paper);
+  font: 700 clamp(2.5rem, 14vw, 5.5rem)/1 var(--label);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.tag--name { rotate: -7deg; }
+.tag--surname { rotate: 7deg; font-weight: 400; }
+
+.margin-title {
+  position: absolute;
+  top: 3rem;
+  right: 1rem;
+  color: var(--ink-soft);
+  font: 400 1rem/1.5rem var(--label);
+  letter-spacing: 0.3em;
+  writing-mode: vertical-rl;
+}
+
+/* Hello spread */
+
+.loop-arrow { width: min(20rem, 70%); margin: 1.5rem 0 1rem 3rem; overflow: visible; }
+.loop-arrow path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+.intro { display: grid; gap: 1rem; max-width: 34rem; }
+.intro__role { font: 400 1.0625rem/1.75rem var(--label); }
+.intro__role strong { font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.3em; }
+
+.print {
+  position: relative;
+  padding: 0.6rem;
+  background: var(--print);
+  box-shadow: var(--lift);
+}
+.print__img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.06); }
+.print--portrait { width: min(100%, 26rem); aspect-ratio: 3 / 4; rotate: 1deg; }
+
+/* Washi tape: translucent, so the print shows through it like the real thing. */
+.tape {
+  position: absolute;
+  z-index: 2;
+  width: 8rem;
+  height: 2rem;
+  background-color: rgb(176 53 31 / 0.2);
+  background-image: repeating-linear-gradient(115deg, rgb(255 255 255 / 0.3) 0 6px, transparent 6px 14px);
+  box-shadow: 0 1px 2px rgb(29 27 53 / 0.18);
+}
+.tape--top { top: -0.9rem; left: 50%; translate: -50% 0; rotate: -3deg; }
+
+.page--photo .tag--surname { position: relative; z-index: 3; margin: -3rem 0 0 1rem; }

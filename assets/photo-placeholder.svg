@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-label="Photo placeholder">
+  <rect width="900" height="1200" fill="#c9c8bc"/>
+  <g fill="none" stroke="#1d1b35" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".55">
+    <path d="M450 330c-92 2-150 72-146 164 4 96 62 176 148 176s142-82 146-176c4-92-56-166-148-164z"/>
+    <path d="M190 1120c8-200 110-330 262-330s256 130 266 330"/>
+  </g>
+</svg>
