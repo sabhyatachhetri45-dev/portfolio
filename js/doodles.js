@@ -20,6 +20,7 @@ if (hasMotion) stampNameLetters();
 const walker = document.querySelector(".walker");
 const me = walker.querySelector(".me");
 const bubble = walker.querySelector(".bubble");
+const pages = [...document.querySelectorAll("[data-spread]")];
 
 const STRIDE = ["stride-a", "pass", "stride-b", "pass"];
 const STRIDE_LENGTH = 70;
@@ -81,6 +82,43 @@ me.addEventListener("click", () => {
 document.addEventListener("spreadchange", ({ detail }) => {
   currentSpread = detail.spread;
   say(spreadLines[currentSpread]);
+  pages.forEach((page) => page.classList.toggle("is-current", Number(page.dataset.spread) === currentSpread));
 });
 
 if (hasMotion) addEventListener("scroll", walk, { passive: true });
+
+const cookie = document.querySelector(".cookie");
+const BITE_LINES = ["another one appeared!", "you found the cookie!", "mmm, one more", "last bite!"];
+const CRUMBS = 7;
+
+function scatterCrumbs() {
+  for (let index = 0; index < CRUMBS; index += 1) {
+    const crumb = document.createElement("span");
+    const angle = Math.random() * Math.PI * 2;
+    const reach = 30 + Math.random() * 40;
+
+    crumb.className = "crumb";
+    cookie.after(crumb);
+    crumb.style.setProperty("left", `${cookie.offsetLeft + cookie.offsetWidth / 2}px`);
+    crumb.style.setProperty("top", `${cookie.offsetTop + cookie.offsetHeight / 2}px`);
+    crumb
+      .animate(
+        [
+          { translate: "0 0", opacity: 1 },
+          { translate: `${Math.cos(angle) * reach}px ${Math.sin(angle) * reach + 30}px`, opacity: 0 },
+        ],
+        { duration: 600, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+      )
+      .finished.then(() => crumb.remove());
+  }
+}
+
+cookie.addEventListener("click", () => {
+  const bites = (Number(cookie.dataset.bites) + 1) % BITE_LINES.length;
+  cookie.dataset.bites = bites;
+  say(BITE_LINES[bites]);
+  if (hasMotion) {
+    hop();
+    scatterCrumbs();
+  }
+});
