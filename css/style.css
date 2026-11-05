@@ -243,3 +243,15 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
 
 .text-link { font-weight: 600; }
 .text-link:hover { text-decoration-color: var(--shu); }
+
+/* Closing spread */
+
+.tag--connect { font-size: clamp(2rem, 10vw, 3.75rem); rotate: -5deg; }
+.closing { margin-top: 3rem; max-width: 26rem; font-size: 1.75rem; line-height: 3rem; }
+
+.link-list { display: grid; gap: 2.5rem; }
+.link-list a { font: 700 clamp(1.5rem, 7vw, 2.25rem)/1.2 var(--label); }
+.link-list a:hover { text-decoration-color: var(--shu); }
+.link-list span:not(.sr-only) { display: block; margin-top: 0.5rem; color: var(--ink-soft); font: 400 1rem/1.5rem var(--label); overflow-wrap: anywhere; }
+
+.colophon { margin-top: 4rem; color: var(--ink-soft); font: 400 1rem/1.75rem var(--label); }
