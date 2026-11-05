@@ -146,3 +146,24 @@ a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.3em
 .tape--top { top: -0.9rem; left: 50%; translate: -50% 0; rotate: -3deg; }
 
 .page--photo .tag--surname { position: relative; z-index: 3; margin: -3rem 0 0 1rem; }
+
+/* About and skills spread */
+
+.tag--section { margin-bottom: 2.5rem; font-size: clamp(2rem, 9vw, 3rem); rotate: -3deg; }
+.tag__light { font-weight: 400; }
+
+.margin-title--left { right: auto; left: 1rem; }
+
+.bio { max-width: 34rem; }
+.bio + .bio { margin-top: 2rem; }
+
+.skills { display: grid; gap: 2rem; margin: 0; }
+.skills__group { display: grid; grid-template-columns: 6rem 1fr; gap: 1rem; align-items: baseline; }
+.skills dt { font: 700 1rem/2rem var(--label); }
+.skills dd { display: flex; flex-wrap: wrap; gap: 0 1.25rem; margin: 0; font-size: 1.5rem; }
+
+/* Marker strokes sit low on the word, the way a highlighter actually gets dragged across it. */
+.skills mark {
+  color: inherit;
+  background: linear-gradient(transparent 40%, var(--marker) 40%, var(--marker) 88%, transparent 88%) no-repeat;
+}
