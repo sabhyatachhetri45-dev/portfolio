@@ -9,13 +9,16 @@
   <link rel="stylesheet" href="css/style.css">
   <script>
     // Runs before first paint so a wide screen never flashes the single-column page.
-    window.notebookQuery = matchMedia("(min-width: 60rem) and (min-height: 30rem) and (prefers-reduced-motion: no-preference)");
-    const root = document.documentElement;
-    const canAnimate = !matchMedia("(prefers-reduced-motion: reduce)").matches;
-    root.classList.toggle("is-book", window.notebookQuery.matches);
-    root.classList.toggle("has-motion", canAnimate);
-    // The cover opens once per visit, and never over a link straight to an inner page.
-    root.classList.toggle("is-opening", canAnimate && !location.hash && !sessionStorage.getItem("notebook-opened"));
+    // The block keeps these names out of the global scope notebook.js shares.
+    {
+      window.notebookQuery = matchMedia("(min-width: 60rem) and (min-height: 30rem) and (prefers-reduced-motion: no-preference)");
+      const { classList } = document.documentElement;
+      const canAnimate = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      classList.toggle("is-book", window.notebookQuery.matches);
+      classList.toggle("has-motion", canAnimate);
+      // The cover opens once per visit, and never over a link straight to an inner page.
+      classList.toggle("is-opening", canAnimate && !location.hash && !sessionStorage.getItem("notebook-opened"));
+    }
   </script>
   <script src="js/notebook.js" defer></script>
 </head>
@@ -62,7 +65,7 @@
           <p class="margin-title" lang="ja">ポートフォリオ</p>
           <figure class="print print--portrait">
             <span class="tape tape--top" aria-hidden="true"></span>
-            <img class="print__img" src="assets/photo-placeholder.svg" width="900" height="1200" alt="Portrait of Sabhyata Chhetri">
+            <img class="print__img" src="assets/photo.jpg" width="720" height="960" alt="Sabhyata Chhetri painting at an easel by a window in a sunlit studio">
           </figure>
           <p class="tag tag--surname" aria-hidden="true">Chhetri</p>
           <a class="turn" href="#about">Scroll to turn the page</a>
